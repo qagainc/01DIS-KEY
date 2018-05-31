@@ -11,6 +11,7 @@
 //#include "myiic.h"
 #include "oled.h"
 //#include "bmp.h"
+#include "timer.h"
 
    	
 //要写入到24c02的字符串数组
@@ -28,11 +29,11 @@ void SendData(unsigned char *str)
 		str++;
 	}
 }
-
+	extern u8 key;
 
  int main(void)
  { 
-	u8 key;
+
 	u16 i=0;
 
 //	u8 datatemp[SIZE2];
@@ -42,13 +43,14 @@ void SendData(unsigned char *str)
 	LED_Init();		  		//初始化与LED连接的硬件接口	
 	KEY_Init();				//按键初始化		 	
 //	AT24CXX_Init();			//IIC初始化 
-   OLED_Init();			//初始化OLED  
+    OLED_Init();			//初始化OLED  
     OLED_Clear() ; 
+    TIM4_Int_Init(100,7199);//10Khz的计数频率，计数到5000为500ms  
     SendData("Start-Read-24C02....\r\n") ; 
       Dis.CurLen =6;
 	while(1)
 	{
-		key=KEY_Scan(1);
+		
         switch(key)
         {
             case KEY0_PRES :  SendData("KEY0 PRESS....\r\n") ;break; 
